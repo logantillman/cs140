@@ -3,14 +3,7 @@ CFLAGS ?= -std=c++98 -Wall -Wextra -Iinclude
 # -------------------------
 # This means that when you just type "make", you make all of the executables
 
-ALL = \
-      bin/dlist_rev_1 \
-      bin/dlist_rev_2 \
-      bin/dlist_rev_3 \
-      bin/dlist_rev_4 \
-      bin/dlist_rev_5 \
-      bin/dlist_rev_6 \
-      bin/dlist_editor \
+ALL = bin/cp_tester bin/random_codes
 
 all: $(ALL)
 
@@ -20,55 +13,21 @@ all: $(ALL)
 clean:
 	rm -f obj/* bin/*
 
-# -------------------------
-# Object files
 
-obj/dlist.o: src/dlist.cpp include/dlist.hpp
-	g++ $(CFLAGS) -c -o obj/dlist.o src/dlist.cpp
+all: bin/cp_tester
 
-obj/dlist_rev_1.o: src/dlist_rev_1.cpp include/dlist.hpp
-	g++ $(CFLAGS) -c -o obj/dlist_rev_1.o src/dlist_rev_1.cpp
+bin/cp_tester: obj/cp_tester.o obj/code_processor.o obj/double_checker.o
+	g++ $(CFLAGS) -o bin/cp_tester obj/cp_tester.o obj/code_processor.o obj/double_checker.o
 
-obj/dlist_rev_2.o: src/dlist_rev_2.cpp include/dlist.hpp
-	g++ $(CFLAGS) -c -o obj/dlist_rev_2.o src/dlist_rev_2.cpp
+obj/cp_tester.o: src/cp_tester.cpp include/code_processor.hpp
+	g++ $(CFLAGS) -o obj/cp_tester.o -c src/cp_tester.cpp
 
-obj/dlist_rev_3.o: src/dlist_rev_3.cpp include/dlist.hpp
-	g++ $(CFLAGS) -c -o obj/dlist_rev_3.o src/dlist_rev_3.cpp
+obj/code_processor.o: src/code_processor.cpp include/code_processor.hpp
+	g++ $(CFLAGS) -o obj/code_processor.o -c src/code_processor.cpp
 
-obj/dlist_rev_4.o: src/dlist_rev_4.cpp include/dlist.hpp
-	g++ $(CFLAGS) -c -o obj/dlist_rev_4.o src/dlist_rev_4.cpp
+obj/double_checker.o: src/double_checker.cpp include/code_processor.hpp
+	g++ $(CFLAGS) -o obj/double_checker.o -c src/double_checker.cpp
 
-obj/dlist_rev_5.o: src/dlist_rev_5.cpp include/dlist.hpp
-	g++ $(CFLAGS) -c -o obj/dlist_rev_5.o src/dlist_rev_5.cpp
-
-obj/dlist_rev_6.o: src/dlist_rev_6.cpp include/dlist.hpp
-	g++ $(CFLAGS) -c -o obj/dlist_rev_6.o src/dlist_rev_6.cpp
-
-obj/dlist_editor.o: src/dlist_editor.cpp include/dlist.hpp
-	g++ $(CFLAGS) -c -o obj/dlist_editor.o src/dlist_editor.cpp
-
-
-# -------------------------
-# Executables
-
-bin/dlist_rev_1: obj/dlist_rev_1.o obj/dlist.o
-	g++ $(CFLAGS) -o bin/dlist_rev_1 obj/dlist_rev_1.o obj/dlist.o
-
-bin/dlist_rev_2: obj/dlist_rev_2.o obj/dlist.o
-	g++ $(CFLAGS) -o bin/dlist_rev_2 obj/dlist_rev_2.o obj/dlist.o
-
-bin/dlist_rev_3: obj/dlist_rev_3.o obj/dlist.o
-	g++ $(CFLAGS) -o bin/dlist_rev_3 obj/dlist_rev_3.o obj/dlist.o
-
-bin/dlist_rev_4: obj/dlist_rev_4.o obj/dlist.o
-	g++ $(CFLAGS) -o bin/dlist_rev_4 obj/dlist_rev_4.o obj/dlist.o
-
-bin/dlist_rev_5: obj/dlist_rev_5.o obj/dlist.o
-	g++ $(CFLAGS) -o bin/dlist_rev_5 obj/dlist_rev_5.o obj/dlist.o
-
-bin/dlist_rev_6: obj/dlist_rev_6.o obj/dlist.o
-	g++ $(CFLAGS) -o bin/dlist_rev_6 obj/dlist_rev_6.o obj/dlist.o
-
-bin/dlist_editor: obj/dlist_editor.o obj/dlist.o
-	g++ $(CFLAGS) -o bin/dlist_editor obj/dlist_editor.o obj/dlist.o
+bin/random_codes: src/random_codes.cpp 
+	g++ $(CFLAGS) -o bin/random_codes src/random_codes.cpp
 

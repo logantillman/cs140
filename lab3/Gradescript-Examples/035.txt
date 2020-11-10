@@ -1,3 +1,1 @@
-READ input.pgm
-PAD 6 40596
-WRITE output.pgm
+21 896

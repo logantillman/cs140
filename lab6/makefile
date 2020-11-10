@@ -3,8 +3,7 @@ CFLAGS ?= -std=c++98 -Wall -Wextra -Iinclude
 # -------------------------
 # This means that when you just type "make", you make all of the executables
 
-ALL = bin/fraction_tester \
-      bin/keno
+ALL = bin/bitmatrix_editor
 
 all: $(ALL)
 
@@ -17,21 +16,15 @@ clean:
 # -------------------------
 # Object files
 
-obj/fraction.o: src/fraction.cpp include/fraction.hpp
-	g++ $(CFLAGS) -c -o obj/fraction.o src/fraction.cpp
+obj/bitmatrix.o: src/bitmatrix.cpp include/bitmatrix.hpp
+	g++ $(CFLAGS) -c -o obj/bitmatrix.o src/bitmatrix.cpp
 
-obj/fraction_tester.o: src/fraction_tester.cpp include/fraction.hpp
-	g++ $(CFLAGS) -c -o obj/fraction_tester.o src/fraction_tester.cpp
-
-obj/keno.o: src/keno.cpp include/fraction.hpp
-	g++ $(CFLAGS) -c -o obj/keno.o src/keno.cpp
+obj/bitmatrix_editor.o: src/bitmatrix_editor.cpp include/bitmatrix.hpp
+	g++ $(CFLAGS) -c -o obj/bitmatrix_editor.o src/bitmatrix_editor.cpp
 
 # -------------------------
 # Executables
 
-bin/fraction_tester: obj/fraction_tester.o obj/fraction.o
-	g++ $(CFLAGS) -o bin/fraction_tester obj/fraction_tester.o obj/fraction.o
-
-bin/keno: obj/keno.o obj/fraction.o
-	g++ $(CFLAGS) -o bin/keno obj/keno.o obj/fraction.o
+bin/bitmatrix_editor: obj/bitmatrix_editor.o obj/bitmatrix.o
+	g++ $(CFLAGS) -o bin/bitmatrix_editor obj/bitmatrix_editor.o obj/bitmatrix.o
 

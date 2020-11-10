@@ -1,3 +1,1 @@
-READ input.pgm
-PAD 49 85
-WRITE output.pgm
+43 382

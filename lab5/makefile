@@ -3,7 +3,7 @@ CFLAGS ?= -std=c++98 -Wall -Wextra -Iinclude
 # -------------------------
 # This means that when you just type "make", you make all of the executables
 
-ALL = bin/bitmatrix_editor
+ALL = bin/read_as_hex bin/hash_tester
 
 all: $(ALL)
 
@@ -16,15 +16,18 @@ clean:
 # -------------------------
 # Object files
 
-obj/bitmatrix.o: src/bitmatrix.cpp include/bitmatrix.hpp
-	g++ $(CFLAGS) -c -o obj/bitmatrix.o src/bitmatrix.cpp
+obj/hash_140.o: src/hash_140.cpp include/hash_140.hpp
+	g++ $(CFLAGS) -c -o obj/hash_140.o src/hash_140.cpp
 
-obj/bitmatrix_editor.o: src/bitmatrix_editor.cpp include/bitmatrix.hpp
-	g++ $(CFLAGS) -c -o obj/bitmatrix_editor.o src/bitmatrix_editor.cpp
+obj/hash_tester.o: src/hash_tester.cpp include/hash_140.hpp
+	g++ $(CFLAGS) -c -o obj/hash_tester.o src/hash_tester.cpp
 
 # -------------------------
 # Executables
 
-bin/bitmatrix_editor: obj/bitmatrix_editor.o obj/bitmatrix.o
-	g++ $(CFLAGS) -o bin/bitmatrix_editor obj/bitmatrix_editor.o obj/bitmatrix.o
+bin/hash_tester: obj/hash_tester.o obj/hash_140.o
+	g++ $(CFLAGS) -o bin/hash_tester obj/hash_tester.o obj/hash_140.o
+
+bin/read_as_hex: src/read_as_hex.cpp
+	g++ $(CFLAGS) -o bin/read_as_hex src/read_as_hex.cpp
 

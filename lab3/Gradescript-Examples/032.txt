@@ -1,3 +1,1 @@
-READ input.pgm
-PAD 27 182
-WRITE output.pgm
+16 765

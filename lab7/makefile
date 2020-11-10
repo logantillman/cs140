@@ -3,7 +3,8 @@ CFLAGS ?= -std=c++98 -Wall -Wextra -Iinclude
 # -------------------------
 # This means that when you just type "make", you make all of the executables
 
-ALL = bin/cp_tester bin/random_codes
+ALL = bin/fraction_tester \
+      bin/keno
 
 all: $(ALL)
 
@@ -13,21 +14,24 @@ all: $(ALL)
 clean:
 	rm -f obj/* bin/*
 
+# -------------------------
+# Object files
 
-all: bin/cp_tester
+obj/fraction.o: src/fraction.cpp include/fraction.hpp
+	g++ $(CFLAGS) -c -o obj/fraction.o src/fraction.cpp
 
-bin/cp_tester: obj/cp_tester.o obj/code_processor.o obj/double_checker.o
-	g++ $(CFLAGS) -o bin/cp_tester obj/cp_tester.o obj/code_processor.o obj/double_checker.o
+obj/fraction_tester.o: src/fraction_tester.cpp include/fraction.hpp
+	g++ $(CFLAGS) -c -o obj/fraction_tester.o src/fraction_tester.cpp
 
-obj/cp_tester.o: src/cp_tester.cpp include/code_processor.hpp
-	g++ $(CFLAGS) -o obj/cp_tester.o -c src/cp_tester.cpp
+obj/keno.o: src/keno.cpp include/fraction.hpp
+	g++ $(CFLAGS) -c -o obj/keno.o src/keno.cpp
 
-obj/code_processor.o: src/code_processor.cpp include/code_processor.hpp
-	g++ $(CFLAGS) -o obj/code_processor.o -c src/code_processor.cpp
+# -------------------------
+# Executables
 
-obj/double_checker.o: src/double_checker.cpp include/code_processor.hpp
-	g++ $(CFLAGS) -o obj/double_checker.o -c src/double_checker.cpp
+bin/fraction_tester: obj/fraction_tester.o obj/fraction.o
+	g++ $(CFLAGS) -o bin/fraction_tester obj/fraction_tester.o obj/fraction.o
 
-bin/random_codes: src/random_codes.cpp 
-	g++ $(CFLAGS) -o bin/random_codes src/random_codes.cpp
+bin/keno: obj/keno.o obj/fraction.o
+	g++ $(CFLAGS) -o bin/keno obj/keno.o obj/fraction.o
 
