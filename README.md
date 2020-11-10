@@ -1,7 +1,7 @@
 # Logan Tillman CS302 Repository - Spring 2020
 **Data Structures / Algorithms I**
 
-# Top Coder Problems
+## Top Coder Problems
 
 * [AlienAndPassword](https://github.com/logantillman/cs140/tree/main/topcoder/AlienAndPassword)
 * [BoundingBox](https://github.com/logantillman/cs140/tree/main/topcoder/BoundingBox)
@@ -18,7 +18,7 @@
 * [SwappingDigits](https://github.com/logantillman/cs140/tree/main/topcoder/SwappingDigits)
 * [TreesAndBrackets](https://github.com/logantillman/cs140/tree/main/topcoder/TreesAndBrackets)
 
-# Labs
+## Labs
 
 * [Lab 0](https://github.com/logantillman/cs140/tree/main/lab0)
 * [Lab 1](https://github.com/logantillman/cs140/tree/main/lab1)
