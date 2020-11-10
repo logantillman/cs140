@@ -1,4 +1,4 @@
-# Logan Tillman CS302 Repository - Spring 2020
+# Logan Tillman CS140 Repository - Fall 2019
 **Data Structures / Algorithms I**
 
 ## Top Coder Problems
