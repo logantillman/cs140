@@ -1,0 +1,12 @@
+Called do_enumeration("---",0,2)
+Called do_enumeration("0--",1,2)
+Called do_enumeration("01-",2,1)
+Called do_enumeration("011",3,0)
+011
+Called do_enumeration("1--",1,1)
+Called do_enumeration("10-",2,1)
+Called do_enumeration("101",3,0)
+101
+Called do_enumeration("11-",2,0)
+Called do_enumeration("110",3,0)
+110

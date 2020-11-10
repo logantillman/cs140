@@ -1,0 +1,138 @@
+<title>SRM 564, D2, 250-Pointer (FauxPalindromes)</title>
+<h3>SRM 564, D2, 250-Pointer (FauxPalindromes)</h3>
+<h3>James S. Plank</h3>
+Fri Dec 21 14:24:29 EST 2018
+<hr>
+
+<UL>
+<LI><a href=https://community.topcoder.com/stat?c=problem_statement&pm=12325&rd=15186>Problem Statement</a>.
+<LI> <a href=main.cpp>A <b>main()</b> with the examples compiled in.</a>
+<LI> <a href=FauxPalindromes.cpp>A skeleton that compiles with <b>main.cpp</b>.</a>
+<p>
+<LI> <b>Problem Given in Topcoder</b>: December, 2012
+<LI> <b>Competitors who opened the problem</b>: 854
+<LI> <b>Competitors who submitted a solution</b>: 773
+<LI> <b>Number of correct solutions</b>: 681
+<LI> <b>Accuracy (percentage correct vs those who opened)</b>: 88.1%
+<LI> <b>Average Correct Time</b>: 16 minutes, 49 seconds.
+</UL>
+
+<hr>
+<h3>In case Topcoder's servers are down</h3>
+
+Here is a summary of the problem:
+
+<UL>
+<LI> You are given a string composed of upper-case letters, whose size is between 1 and 50 characters.
+<LI> If the string is a palindrome (meaning it reads the same backward and forward), the
+     return the string "PALINDROME".
+<LI> Otherwise, if the string is a "faux" palindrome (defined below), return the string "FAUX".
+<LI> Otherwise, return the string "NOT EVEN FAUX".
+<LI> A "faux" palindrome is a string where, if you replace all consecutive occurrences of
+     the same letter with a single occurrence of that letter, is a palindrome.
+<LI> For example, "AABBAAAA" is a faux palindrome, because when you 
+     replace all consecutive occurrences of
+     the same letter with a single occurrence of that letter, you get "ABA", which is palindrome.
+</UL>
+<hr>
+<h3>The examples</h3>
+
+<center>
+<table border=3 cellpadding=3>
+<tr><td align=center>Example</td>
+    <td align=center>Input</td>
+    <td align=center>Answer</td></tr>
+<tr><td align=center valign=center>0</td>
+    <td align=center valign=center><pre>"ANA"</pre></td>
+    <td align=center valign=center><pre>"PALINDROME"</pre></td>
+<tr><td align=center valign=center>1</td>
+    <td align=center valign=center><pre>"AAAAANNAA"</pre></td>
+    <td align=center valign=center><pre>"FAUX"</pre></td>
+<tr><td align=center valign=center>2</td>
+    <td align=center valign=center><pre>"LEGENDARY"</pre></td>
+    <td align=center valign=center><pre>"NOT EVEN FAUX"</pre></td>
+<tr><td align=center valign=center>3</td>
+    <td align=center valign=center><pre>"XXXYTYYTTYX"</pre></td>
+    <td align=center valign=center><pre>"FAUX"</pre></td>
+<tr><td align=center valign=center>4</td>
+    <td align=center valign=center><pre>"TOPCOODEREDOOCPOT"</pre></td>
+    <td align=center valign=center><pre>"PALINDROME"</pre></td>
+<tr><td align=center valign=center>5</td>
+    <td align=center valign=center><pre>"TOPCODEREDOOCPOT"</pre></td>
+    <td align=center valign=center><pre>"FAUX"</pre></td>
+<tr><td align=center valign=center>6</td>
+    <td align=center valign=center><pre>"XXXXYYYYYZZXXYYY"</pre></td>
+    <td align=center valign=center><pre>"NOT EVEN FAUX"</pre></td>
+</table></center><p>
+<hr>
+<h3>Testing yourself</h3>
+
+Like the <a href=../../2010/Cryptography/index.html>Cryptography Problem</a>, 
+I have a shell script 
+<b><a href=tests.sh>tests.sh</a></b>
+, that you can use to test your program.  When you 
+run <b>tests.sh</b>, your answer should be identical to 
+<b><a href=answers.txt>answers.txt</a></b>.
+
+<hr>
+<h3>Hints</h3>
+Give this one a try, and if you want help, then scroll down and read below.
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+You have three cases to determine:
+
+<OL>
+<LI> Palindrome?
+<LI> Not Palindrome, but Faux?
+<LI> Not even Faux?
+</OL>
+
+It's best to tackle these in order.  My strategy here was to write a procedure (or method)
+called <tt>ispal(string s)</tt>, which returned 1 if the string was a palendrome, and 0 otherwise.
+I then called it on <b>word</b>, and returned "PALINDROME" if it was a palindrome, and
+"NOT" otherwise. I tested this on examples 0 through 6.
+<p>
+Next, I constructed a new string <b>s</b>, which was equal to <b>word</b> with no consecutive
+identical characters.  After testing this, I called <tt>ispal()</tt> on it, and that
+let me return either "FAUX" or "NOT EVEN FAUX".  
+<p>
+Done.
+

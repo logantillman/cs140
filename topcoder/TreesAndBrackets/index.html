@@ -1,0 +1,534 @@
+<title>SRM 731, D1, 250-Pointer (TreesAndBrackets)</title>
+<h3>SRM 731, D1, 250-Pointer (TreesAndBrackets)</h3>
+<h3>James S. Plank</h3>
+Sun Nov  3 13:01:57 EST 2019
+<hr>
+
+<UL>
+<LI><a href=https://community.topcoder.com/stat?c=problem_statement&pm=14836&rd=17095>Problem Statement</a>.
+<LI> <a href=main.cpp>A <b>main()</b> with the examples compiled in.</a>
+<LI> <a href=TreesAndBrackets.cpp>A skeleton that compiles with <b>main.cpp</b>.</a>
+<p>
+<LI> <b>Problem Given in Topcoder</b>: March, 2018
+<LI> <b>Competitors who opened the problem</b>: 184
+<LI> <b>Competitors who submitted a solution</b>: 171
+<LI> <b>Number of correct solutions</b>: 97
+<LI> <b>Accuracy (percentage correct vs those who opened)</b>: 52.7%
+<LI> <b>Average Correct Time</b>: 21 Minutes, 42 seconds.
+</UL>
+
+<hr>
+<h3>In case Topcoder's servers are down</h3>
+
+Here is a summary of the problem:
+
+<UL>
+<LI> You can define a tree with a string of parentheses -- <tt>"()"</tt> represents a 
+     leaf node, and <tt>"(<i>ABC</i>)"</tt> represents a tree with three subtrees, <i>A</i>,
+     <i>B</i> and <i>C</i>.
+<LI> You are given strings of two trees, <i>t1</i> and <i>t2</i>.
+<LI> You want to decide whether you can convert <i>t1</i> to <i>t2</i> by repeatedly deleting
+     leaf nodes from <i>t1</i>.
+<LI> If it's possible to do this conversion, return "Possible".
+<LI> Otherwise, return "Impossible".
+<LI> The strings that you are passed will be legal, and topcoder caps their size at 100.
+     My tests cap their size at 200,000.
+</UL>
+<hr>
+<h3>The examples</h3>
+
+<center>
+<table border=3 cellpadding=3>
+<tr><td align=center>Example</td>
+    <td align=center>t1</td>
+    <td align=center>t2</td>
+    <td align=center>Answer</td></tr>
+<tr><td align=center>0</td>
+    <td align=center><tt>"(())"</tt></td>
+    <td align=center><tt>"()"</tt></td>
+    <td align=center><tt>"Possible"</td></tr>
+<tr><td align=center>1</td>
+    <td align=center><tt>"()"</tt></td>
+    <td align=center><tt>"()"</tt></td>
+    <td align=center><tt>"Possible"</td></tr>
+<tr><td align=center>2</td>
+    <td align=center><tt>"(()()())"</tt></td>
+    <td align=center><tt>"((()))"</tt></td>
+    <td align=center><tt>"Impossible"</td></tr>
+<tr><td align=center>3</td>
+    <td align=center><tt>"((())((())())())"</tt></td>
+    <td align=center><tt>"(()(())())"</tt></td>
+    <td align=center><tt>"Possible"</td></tr>
+<tr><td align=center>4</td>
+    <td align=center><tt>"((())((())())())"</tt></td>
+    <td align=center><tt>"((()()()()()))"</tt></td>
+    <td align=center><tt>"Impossible"</td></tr>
+</table></center><p>
+
+<hr>
+<h3>Testing yourself</h3>
+
+Like the <a href=../../2010/Cryptography/index.html>Cryptography Problem</a>,
+I have a shell script <b>tests.sh</b>, that you can use to test your program.  When you
+run <b>tests.sh</b>, your answer should be identical to
+<b><a href=answers.txt>answers.txt</a></b>.  
+
+<hr>
+<h2>Hints</h2>
+When I first did this problem, it destroyed me.  
+I'm glad, for the sake of my self-esteem, that I didn't do this
+one live during a tournament.  My original writeup went through my failed attempt and
+emotional process, but upon reading it a year later, I realize that it is not a very helpful
+writeup.  I include it at the end of this writeup, in case you want to commune with me for
+making a problem much harder than it needs to be....
+<p>
+Back to this problem.  There are a few key observations to make here that end up simplifying
+this problem:
+<h3>Observations</h3>
+<b>Observation #1</b>: While the problem description talks about deleting leaf nodes, in reality,
+you are deleting subtrees of T1 to match T2.  Let's draw out example 3:
+
+<p><center><table border=3 cellpadding=10>
+<td valign=top align=center><i>t1</i><p><img src=T1.jpg height=150></td>
+<td valign=top align=center><i>t2</i><p><img src=T2.jpg height=106></td></table></center><p>
+
+It should be pretty clear that you can make <i>t1</i> match <i>t2</i> by deleting the blue nodes.
+Let's make a beefier example below.  Again, you can make <i>t1</i> match <i>t2</i> by deleting the blue
+nodes, and now, instead of deleting nodes, you are actually deleting trees.  I've labeled
+the subtrees of the root for explanation later.
+
+<p><center><table border=3 cellpadding=10>
+<td valign=top align=center><i>t1</i><p><img src=T3.jpg height=150></td>
+<td valign=top align=center><i>t2</i><p><img src=T4.jpg height=150></td></table></center><p>
+
+<b>Observation #2</b>: When you are matching <i>t1</i> and <i>t2</i>, you cannot delete the root nodes.
+This is because you delete subtrees of <i>t1</i>.  If you delete the root of <i>t1</i>, then you will
+have deleted the entire subtree.
+<p>
+
+<b>Observation #3</b>: If <i>t1</i> is a single node, and <i>t2</i> is not, then <i>t1</i> will not match <i>t2</i>.  That is the case if you try to match <i>a1</i> and <i>b1</i> above.
+
+<b>Observation #4</b>: If <i>t2</i> is a single node, and <i>t1</i> is not empty, then <i>t1</i> will match <i>t2</i>.  That's
+because you can delete all of <i>t1</i> except for the root, and then it matches <i>t2</i>.<p>
+
+<b>Observation #5</b>: Let us suppose now that <i>t1</i> and <i>t2</i> are not single nodes.  Each of them
+is the root of an ordered collection of subtrees.  Let's call <i>t1</i>'s subtrees <i>a1</i>, <i>a2</i>, ... and
+<i>t2</i>'s subtrees <i>b1</i>, <i>b2</i>, ...  If <i>a1</i> matches <i>b1</i>, then you can delete both subtrees, and solve
+the problem on the remaining subtrees.  You can see this illustrated in the top example, where
+the two leftmost subtrees of <i>t1</i> and <i>t2</i> match.  Therefore, you can delete them, and move on.
+In that example, you match each subtree in that manner, and conclude that the two trees match.
+<p>
+
+<b>Observation #6</b>: Let us suppose now <i>a1</i> and <i>b1</i> don't match.  Then, you delete <i>a1</i>, and
+try again.  Looking at the beefier example above, we can do the following to show that the
+trees match:
+
+<UL>
+<LI> <i>a1</i> and <i>b1</i> don't match, so delete <i>a1</i>.
+<LI> <i>a2</i> and <i>b1</i> match, so delete both.
+<LI> <i>a3</i> and <i>b2</i> don't match, so delete <i>a3</i>.
+<LI> <i>a4</i> and <i>b2</i> match, so delete both.
+<LI> <i>a5</i> and <i>b3</i> don't match, so delete <i>a3</i>.
+<LI> <i>a6</i> and <i>b3</i> match, so delete both.
+<LI> At this point, <i>t2</i> is a single node, so you can conclude that <i>t1</i> and <i>t2</i> match.
+</UL>
+
+<hr>
+<h3>Turning the observations into a solution</h3>
+
+We're not going to delete anything.  We're not even going to bother representing the problem
+as a tree.  Instead, we're going to create the following two vectors:
+
+<UL>
+<LI> <b>M1</b> is a vector where <b>M1[i]</b> is the index of the opening or closing character for <b>t1[i]</b>.
+<LI> <b>M2</b> is the same vector, but for <b>t2</b>.
+</UL>
+
+In example 3, we have:
+
+<pre>
+     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+t1:  (  (  (  )  )  (  (  (  )  )  (  )  )  (  )  )
+M1: 15  4  3  2  1 12  9  8  7  6 11 10  5 14 13  0
+
+t2:  (  (  )  (  (  )  )  (  )  )
+M2:  9  2  1  6  5  4  3  8  7  0
+</pre>
+
+You can create these vectors using a <b>deque</b> like a stack: push the index when you see '(', 
+and pop the index when you see ')'.  When you pop the index, you can set two elements of <b>M1</b>.
+Go ahead and write the code for this right now, and test it.
+<p>
+Store these vectors as part of the class, and then write the following method:
+
+<p><center><table border=3 cellpadding=3><td><pre>
+bool match(int i1, int i2) const;   <font color=blue>// This returns true if the subtree rooted at i1 in t1</font>
+                                    <font color=blue>// matches the the subtree rooted at i2 in t2</font>
+</pre></td></table></center><p>
+
+Your <b>check()</b> method will call <b>match(0,0)</b> to solve the problem.
+<p>
+Use the observations above to write <b>match()</b>.  To wit:
+
+<UL>
+<LI> If the subtree rooted at i2 is a single node (in other words, <b>M2[i2]</b> equals <b>(i2+1)</b>, return true.
+<LI> If the subtree rooted at i1 is a single node, return false.
+<LI> Otherwise, you are going to run through the subtrees.  You'll note that the first subtree of
+     i1 is indices i1+1 through <b>M1[i1+1]</b>.  The next subtree, if there is one, starts
+     at index <b>M1[i1+1]+1</b>, and you use <b>M1</b> find its ending index.  And so on.
+<LI> Let's call the subtree of t1 <b>a</b> and the subtree of t2 <b>b</b>.  Call <i>match()</i>
+     recursively on the two subtrees.  If it returns true, you'll move both <b>a</b> and <b>b</b>
+     to the next subtrees.  If it returns false, you'll only move <b>a</b>.
+</UL>
+
+Below, I have put print statements into my program so that you can see the two vectors, and
+all of the recursive calls.  I've also added
+example 5 as the "beefier" example above, and I've annotated the output so that you can see
+how the <b>match()</b> calls correspond to the picture above.
+<p>
+But before that, what's the running time?  Well, if you think about it, we only visit every
+node of t1 once, and for each of those, we visit exactly one node of t2.  The answer
+is <i>O(|t1|)</i>.
+
+<pre>
+UNIX> <font color=darkred><b>a.out 0</b></font>
+     0  1  2  3
+t1:  (  (  )  )
+M1:  3  2  1  0
+
+t2:  (  )
+M2:  1  0
+
+
+match(0,0) called. T1: (()) T2: () 
+match(0,0) returns true
+
+Possible
+UNIX> <font color=darkred><b>a.out 1</b></font>
+     0  1
+t1:  (  )
+M1:  1  0
+
+t2:  (  )
+M2:  1  0
+
+
+match(0,0) called. T1: () T2: () 
+match(0,0) returns true
+
+Possible
+UNIX> <font color=darkred><b>a.out 2</b></font>
+     0  1  2  3  4  5  6  7
+t1:  (  (  )  (  )  (  )  )
+M1:  7  2  1  4  3  6  5  0
+
+t2:  (  (  (  )  )  )
+M2:  5  4  3  2  1  0
+
+
+match(0,0) called. T1: (()()()) T2: ((())) 
+match(0,0) calling match(1,1)
+
+  match(1,1) called. T1: () T2: (()) 
+  match(1,1) returns false
+
+match(0,0) calling match(3,1)
+
+  match(3,1) called. T1: () T2: (()) 
+  match(3,1) returns false
+
+match(0,0) calling match(5,1)
+
+  match(5,1) called. T1: () T2: (()) 
+  match(5,1) returns false
+
+match(0,0) returns false
+
+Impossible
+UNIX> <font color=darkred><b>a.out 3</b></font>
+     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+t1:  (  (  (  )  )  (  (  (  )  )  (  )  )  (  )  )
+M1: 15  4  3  2  1 12  9  8  7  6 11 10  5 14 13  0
+
+t2:  (  (  )  (  (  )  )  (  )  )
+M2:  9  2  1  6  5  4  3  8  7  0
+
+
+match(0,0) called. T1: ((())((())())()) T2: (()(())()) 
+match(0,0) calling match(1,1)
+
+  match(1,1) called. T1: (()) T2: () 
+  match(1,1) returns true
+
+match(0,0) calling match(5,3)
+
+  match(5,3) called. T1: ((())()) T2: (()) 
+  match(5,3) calling match(6,4)
+
+    match(6,4) called. T1: (()) T2: () 
+    match(6,4) returns true
+
+  match(5,3) returns true
+
+match(0,0) calling match(13,7)
+
+  match(13,7) called. T1: () T2: () 
+  match(13,7) returns true
+
+match(0,0) returns true
+
+Possible
+UNIX> <font color=darkred><b>a.out 4</b></font>
+     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+t1:  (  (  (  )  )  (  (  (  )  )  (  )  )  (  )  )
+M1: 15  4  3  2  1 12  9  8  7  6 11 10  5 14 13  0
+
+t2:  (  (  (  )  (  )  (  )  (  )  (  )  )  )
+M2: 13 12  3  2  5  4  7  6  9  8 11 10  1  0
+
+
+match(0,0) called. T1: ((())((())())()) T2: ((()()()()())) 
+match(0,0) calling match(1,1)
+
+  match(1,1) called. T1: (()) T2: (()()()()()) 
+  match(1,1) calling match(2,2)
+
+    match(2,2) called. T1: () T2: () 
+    match(2,2) returns true
+
+  match(1,1) returns false
+
+match(0,0) calling match(5,1)
+
+  match(5,1) called. T1: ((())()) T2: (()()()()()) 
+  match(5,1) calling match(6,2)
+
+    match(6,2) called. T1: (()) T2: () 
+    match(6,2) returns true
+
+  match(5,1) calling match(10,4)
+
+    match(10,4) called. T1: () T2: () 
+    match(10,4) returns true
+
+  match(5,1) returns false
+
+match(0,0) calling match(13,1)
+
+  match(13,1) called. T1: () T2: (()()()()()) 
+  match(13,1) returns false
+
+match(0,0) returns false
+
+Impossible
+UNIX> <font color=darkred><b>a.out 5</b></font>
+     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45
+<font color=blue>#       [a1]  [---------a2---------]  [---------a3---------]  [---------a4---------]  [a5] [----------------a6---------------------]  [a7]</font>
+t1:  (  (  )  (  (  (  )  (  )  )  )  (  (  )  (  (  )  )  )  (  (  (  )  (  )  )  )  (  )  (  (  )  (  (  )  (  )  )  (  (  )  )  )  (  )  )
+M1: 45  2  1 10  9  6  5  8  7  4  3 18 13 12 17 16 15 14 11 26 25 22 21 24 23 20 19 28 27 42 31 30 37 34 33 36 35 32 41 40 39 38 29 44 43  0
+
+<font color=blue>#       [---b1---]  [---------b2---------]  [---b3---]</font>
+t2:  (  (  (  )  )  (  (  (  )  (  )  )  )  (  (  )  )  )
+M2: 17  4  3  2  1 12 11  8  7 10  9  6  5 16 15 14 13  0
+
+
+match(0,0) called. T1: (()((()()))(()(()))((()()))()(()(()())(()))()) T2: ((())((()()))(())) 
+match(0,0) calling match(1,1)               <font color=blue> # This tests a1 against b1</font>
+
+  match(1,1) called. T1: () T2: (())          
+  match(1,1) returns false                  <font color=blue> # False: We move onto a2</font>
+
+match(0,0) calling match(3,1)               <font color=blue> # This tests a2 against b1</font>
+
+  match(3,1) called. T1: ((()())) T2: (())
+  match(3,1) calling match(4,2)
+
+    match(4,2) called. T1: (()()) T2: () 
+    match(4,2) returns true
+
+  match(3,1) returns true                    <font color=blue> # True: We move onto both a3 and b2</font>
+
+match(0,0) calling match(11,5)               <font color=blue> # This tests a3 against b2</font>
+
+  match(11,5) called. T1: (()(())) T2: ((()())) 
+  match(11,5) calling match(12,6)
+
+    match(12,6) called. T1: () T2: (()()) 
+    match(12,6) returns false
+
+  match(11,5) calling match(14,6)
+
+    match(14,6) called. T1: (()) T2: (()()) 
+    match(14,6) calling match(15,7)
+
+      match(15,7) called. T1: () T2: () 
+      match(15,7) returns true
+
+    match(14,6) returns false
+
+  match(11,5) returns false                  <font color=blue> # False: We move onto a4</font>
+
+match(0,0) calling match(19,5)               <font color=blue> # This tests a4 against b2</font>
+
+  match(19,5) called. T1: ((()())) T2: ((()())) 
+  match(19,5) calling match(20,6)
+
+    match(20,6) called. T1: (()()) T2: (()()) 
+    match(20,6) calling match(21,7)
+
+      match(21,7) called. T1: () T2: () 
+      match(21,7) returns true
+
+    match(20,6) calling match(23,9)
+
+      match(23,9) called. T1: () T2: () 
+      match(23,9) returns true
+
+    match(20,6) returns true
+
+  match(19,5) returns true                    <font color=blue> # True: We move onto both a5 and b3</font>
+
+match(0,0) calling match(27,13)               <font color=blue> # This tests a5 against b3</font>
+
+  match(27,13) called. T1: () T2: (()) 
+  match(27,13) returns false                  <font color=blue> # False: We move onto a6</font>
+
+match(0,0) calling match(29,13)               <font color=blue> # This tests a6 against b3</font>
+
+  match(29,13) called. T1: (()(()())(())) T2: (()) 
+  match(29,13) calling match(30,14)
+
+    match(30,14) called. T1: () T2: () 
+    match(30,14) returns true
+
+  match(29,13) returns true                   <font color=blue> # True: We move onto a6, but there are no more b's</font>
+
+match(0,0) returns true                       <font color=blue> # Since there are no more b's, we return true.</font>
+
+Possible
+UNIX> <font color=darkred><b></b></font>
+</pre>
+
+
+<hr>
+<h3>My original writeup, which is not overly helpful</h3>
+
+Let me describe for you how I went about this one:
+<p>
+First, I thought, <i>Let's try a simple dynamic program on <b><i>t1</i></b>.  I'll check to see if 
+<b><i>t1</i></b> equals <b><i>t2</i></b> .  If so, return "Possible".  Next, I'll check if they don't equal each other, but
+they are the same size.  If so, return "Impossible".  Finally, I'll run through <b><i>t1</i></b>, and each time
+I see "()", I'll call <b>check()</b> recursively on a string made from <b><i>t1</i></b> with the "()" removed.
+Memoize and submit.</i>  
+<p>
+The good news with this is that it worked with all of the examples.  The bad news is that I 
+had a haunting feeling about its running time.
+Let's reason through it -- suppose that <b><i>t1</i>.size()</b>
+is 100.  Then <b><i>t1</i></b> represents a tree with 50 nodes.  If the tree is complete, then its 
+bottom row has 25 nodes, and we can potentially have <i>2<sup>25</sup></i> different settings
+of keeping and deleting those nodes.  It's too expensive.  But, I thought, "Maybe it will
+be fast enough...."  To check, I hastily created test
+case number six in <b>main.cpp</b>, with a string where <b><i>t1</i></b> had 
+100 characters.  The code looked like this:
+
+<pre>
+  if (atoi(argv[1]) == 6) {
+    <i>t1</i> = "(((())((())())())((())((())())())((())((())())())((())((())())())((())((())())())((())((())())())())";
+    <i>t1</i> = "((())((())())())";
+    <i>t2</i> = "((()()()()()))";
+  }
+</pre>
+
+You'll notice that I didn't delete the line <b><i>t1</i> = "((())((())())())";</b> that I had
+copied from test case 4, 
+so I wasn't actually testing the big case.  When it ran blazingly fast, I submitted, and failed 
+the system test on the time limit.  Below is the failing case from the system test, -- I turned it into
+case 7 in <b>main.cpp</b>:
+
+<pre>
+  if (atoi(argv[1]) == 7) {
+    <i>t1</i> = "((()(()()((()()(()(()((()(((()(())())()())()())())()())())()))()()))()))"; 
+    <i>t2</i> = "(((()(((((((()()())())())())()))))))";
+  }
+</pre>
+
+Crap.  In the back of my mind, I knew that was a bad solution.  I was lazy, and got what
+I deserved.  It's a pity -- sometimes, lazy works...
+<p>
+I then thought, maybe if I convert the strings into two <b>unit64_t</b>'s each, I can 
+represent '(' with 0 and ')' with 1, and then delete the "()" strings using bit operations.
+That will probably speed my code up by a factor of 100, so maybe it will be fast enough.
+60 lines later and more minutes than I care to divulge, I decided that I didn't want to 
+implement what amounts to 128-bit bit shifting and masking on vectors of <b>uint64_t</b>'s,
+and typed a bunch of d's into my vi window.
+<p>
+Ego bruised, I went back to the drawing board, and realized that for this to work, the
+top node of <b><i>t1</i></b> has to correspond to the top node of <b><i>t2</i></b>.  Let's suppose that
+the top node of <b><i>t1</i></b> has three children, and the top node of <b><i>t2</i></b> has two.  
+Then either the first child of <b><i>t1</i></b> has to match the 
+first child of <b><i>t2</i></b>, or the second child of <b><i>t1</i></b> has to match the first child
+of <b><i>t2</i></b>.  Whichever of those matches, one of the remaining children of <b><i>t1</i></b> has
+to match the second child of <b><i>t2</i></b>. 
+<p>
+We get the following algorithm:
+<p>
+<pre>
+   int match(root-of-subtree-in-<i>t1</i>, root-of-subtree-in-<i>t2</i>)
+   {
+     if (root-of-subtree-in-<i>t2</i> has no children) return 1;
+     if (root-of-subtree-in-<i>t1</i> has no children) return 0;
+     return sibling_match(<i>t1</i>'s-children, <i>t2</i>'s-children);
+   }
+
+   int sibling_match(siblings-in-<i>t1</i>, siblings-in-<i>t2</i>)
+   {
+     int i, j;
+ 
+     i = 0;
+     j = 0;
+     while(1) {
+       if (j == siblings-in-<i>t2</i>.size()) return 1;
+       if (i == siblings-in-<i>t1</i>.size()) return 0;
+       if (match(sibling-i-in-<i>t1</i>, sibling-j-in-<i>t2</i>)) {
+         i++;
+         j++;
+       } else {
+         i++;
+       }
+     }
+   }
+</pre>
+
+That's actually not too bad of an algorithm, but I hadn't really wrapped my mind around
+it, so I wrote only <b>sibling_match()</b>, and made it work without <b>match()</b>.  Moreover, I didn't
+know how to represent my graphs, so I defined a node as follows:
+
+<pre>
+class node {
+  public:
+    vector &lt;node *&gt; children;
+};
+</pre>
+
+And I converted the strings to this format with a recursive procedure.  In <b>check</b>, I 
+called <b>sibling_match(<i>t1</i>root->children, <i>t2</i>root->children)</b>.  It took well over a half hour
+to code up, but it worked -- damn that was a pain!  I went to the Topcoder writeup and saw that the problem
+had over 50% success rate, and the average correct time was 20 minutes.  And the problem was
+labeled "Dynamic Program" and "String Manipulation."  WTF?  
+<p>
+I slept on it.
+<p>
+I lied in the bed the next morning, and thought, "What if I simply work on the strings?"
+I can create a vector <b>M1</b>, such that <b>M1[i]</b> equals the mate to letter <i>i</i>
+in <b><i>t1</i></b>.  For example, if <b><i>t1</i></b> is "(()())", then <b>M1</b> will be 
+{ 5, 2, 1, 4, 2, 0 }.  Then, I can specify a subtree rooted at character <i>i</i> 
+in <b><i>t1</i></b> with <i>(i,<b>M[i]</b>)</i>.  And I can represent a group of siblings with
+the index of the first '(', and the index of the last ')'.  I put the two strings into
+the class definition, and now I could write 
+<b>match()</b> and <b>sibling_match()</b> above by simply calling them with indices 
+representing the two subtrees/sets-of-siblings.
+<p>
+It was still 93 lines of code, but I wrote it quickly, and as it passed the system test
+on the first try, I felt slightly better about myself.
+<p>
+See if you can give it a try!

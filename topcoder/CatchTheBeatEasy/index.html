@@ -1,0 +1,156 @@
+<title>SRM 623, D2, 250-Pointer (CatchTheBeatEasy)</title>
+<h3>SRM 623, D2, 250-Pointer (CatchTheBeatEasy)</h3>
+<h3>James S. Plank</h3>
+Mon Aug 29 16:37:09 EDT 2016
+<hr>
+
+<UL>
+<LI><a href=https://community.topcoder.com/stat?c=problem_statement&pm=13208&rd=15856>Problem Statement</a>.
+<LI> <a href=main.cpp>A <b>main()</b> with the examples compiled in.</a>
+<LI> <a href=CatchTheBeatEasy.cpp>A skeleton that compiles with <b>main.cpp</b>.</a>
+<p>
+<LI> <b>Problem Given in Topcoder</b>: June, 2014
+<LI> <b>Competitors who opened the problem</b>: 609
+<LI> <b>Competitors who submitted a solution</b>: 496
+<LI> <b>Number of correct solutions</b>: 282
+<LI> <b>Accuracy (percentage correct vs those who opened)</b>: 46.31%
+<LI> <b>Average Correct Time</b>: 24 minutes, 5 seconds.
+</UL>
+
+<h3>In case Topcoder's servers are down</h3>
+
+Here is a summary of the problem:
+
+<UL>
+<LI> You are playing a video game which works in discrete 1-second time steps.
+<LI> At the start of the game, you are at the point (0,0), and there is a collection 
+     of fruit at various <i>(x,y)</i> points above you.  
+<LI> The fruit is given to you in two vectors <b>x</b> and <b>y</b>, which are the same
+     size.  Fruit <i>i</i> starting location is in <i><b>(x[i], y[i])</b></i>.
+<LI> At each time step, the fruit will move one point lower --
+     <i>(x,y)</i>  becomes
+     <i>(x,y-1)</i>.
+<LI> You may only move horizontally, one unit per time step.  In other words, you
+    <i>(x,0)</i> may become
+    <i>(x-1,0)</i>,
+    <i>(x,0)</i> or
+    <i>(x+1,0)</i>.
+<LI> You can "catch" fruit if you are at the fruit's <i>x</i> position when the fruit's
+     <i>y</i> position becomes zero.
+<LI> Your goal is to catch all of the fruit.  If you can do this, return the string "Able to catch".
+     If you cannot, return the string "Not able to catch".
+<LI> Although the topcoder constraints limit you to 50 fruit, I'm bumping that up to 10,000.
+<LI> The fruits' <i>x</i> locations will be between -1,000,000 and 1,000,000.
+<LI> The fruits' <i>y</i> locations will be between 0 and 100,000.
+</UL>
+<hr>
+<h3>The examples</h3>
+
+<UL>
+<LI> Example 0:
+<pre>
+x = {-1, 1, 0}
+y = {1, 3, 4}
+Returns: "Able to catch"
+</pre>
+    	
+<LI> Example 1:
+<pre>
+x = {-3}
+y = {2}
+Returns: "Not able to catch"
+</pre>
+
+<LI> Example 2:
+<pre>
+x = {-1, 1, 0}
+y = {1, 2, 4}
+Returns: "Not able to catch"
+</pre>
+
+<LI> Example 3:
+<pre> 
+x = {0, -1, 1}
+y = {9, 1, 3}
+Returns: "Able to catch"
+</pre>
+    	
+<LI> Example 4:
+<pre> 
+x = {70,-108,52,-70,84,-29,66,-33}
+y = {141,299,402,280,28,363,427,232}
+Returns: "Not able to catch"
+</pre>
+    	
+<LI> Example 5:
+<pre> 
+x = {-175,-28,-207,-29,-43,-183,-175,-112,-183,-31,-25,-66,-114,-116,-66}
+y = {320,107,379,72,126,445,318,255,445,62,52,184,247,245,185}
+Returns: "Able to catch"
+</pre>
+    	
+<LI> Example 6:
+<pre>
+{0,0,0,0}
+{0,0,0,0}
+Returns: "Able to catch"
+</pre>
+</UL>
+
+<hr>
+<h3>Testing yourself</h3>
+
+Like the <a href=../../2010/Cryptography/index.html>Cryptography Problem</a>,
+I have a shell script <b>tests.sh</b>, that you can use to test your program.  When you
+run <b>tests.sh</b>, your answer should be identical to
+<b><a href=answers.txt>answers.txt</a></b>, and the running time should be less than
+a second, total (mine was 0.67 seconds).
+<hr>
+<h3>Hints</h3>
+
+This problem is all about using the right data structure for the job, and I can only 
+imagine that the high number of incorrect answers comes from the fact that the programmers
+were not comfortable with multimaps.  At least, that's my best guess.  So, this will be
+a good problem for you if you are learning maps/multimaps.
+<p>
+Suppose you are
+at the starting point.  Which candy do you have to get next?  It has to be the lowest
+one.  So you move to the <i>x</i> value of the lowest one, if you can.  At that point,
+you care about the next lowest one, and so on.
+<p>
+Let's walk example 0. The candies are at (-1,1), (1,3) and (0,4).
+So:
+<UL>
+<LI> You start at (0,0).  You care about the lowest candy, which is (-1,1).
+<LI> Your <i>x</i> distance to the candy is 1, as is the <i>y</i> distance.  That means that
+you can move to <i>x=-1</i> in time to get the candy.
+<LI> You are now at (-1,1).  You care about the next lowest candy, which is (1,3).
+<LI> Your <i>x</i> distance to the candy is 2, and the <i>y</i> distance is also 2.  
+That means that you can move to <i>x=1</i> in time to get the candy.
+<LI> You are now at (1,3).  You care about the next lowest candy, which is (0,4).
+<LI> Your <i>x</i> distance to the candy is 1, and the <i>y</i> distance is also 1.  
+That means that you can move to <i>x=0</i> in time to get the candy.
+<LI> You're done, so you can return "Able to catch."
+</ul>
+
+Solving the problem works exactly in this manner.  You first need to arrange the candies
+in increasing order of <i>y</i> values.  To do this, insert the points into a multimap.
+Why a multimap?  Because there may points with duplicate <i>y</i> values.  When you insert
+a point, make the <i>y</i> value the <b>first</b> part of the entry, make the
+<i>x</i> value the <b>second</b> part.  
+
+<p>
+Now, simulate the game.  Let's call your current <i>x</i> value <i>cx</i>, and your
+current <i>y</i> value <i>cy</i>.  You'll start with both of these equal to zero.
+<p>
+Now, you traverse the multimap.  Calculate 
+your <i>x</i> distance from the point in the multimap to <i>cx</i> and 
+your <i>y</i> distance from the point in the multimap to <i>cy</i>.  If the <i>x</i> distance
+is greater than the <i>y</i> distance, then you're done -- you are "Not able to catch."
+Otherwise, update <i>cx</i> and <i>cy</i>, and continue.  If you reach the end of the 
+multimap, you can return "Able to catch."
+
+Here's a picture of example 4, which shows all of the points that make the
+answer "Not able to catch."
+
+<p><center><table border=3><td><a href=E5.jpg><img src=E5.jpg width=600></a></td></table></center><p>

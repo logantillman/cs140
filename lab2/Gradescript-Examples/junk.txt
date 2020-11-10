@@ -1,0 +1,14 @@
+071.pgm
+014.pgm
+055.pgm
+090.pgm
+008.pgm
+083.pgm
+045.pgm
+072.pgm
+058.pgm
+017.pgm
+061.pgm
+068.pgm
+065.pgm
+009.pgm

@@ -1,0 +1,283 @@
+<title>SRM 583, D2, 250-Pointer (SwappingDigits)</title>
+<h3>SRM 583, D2, 250-Pointer (SwappingDigits)</h3>
+<h3>James S. Plank (with help from Allen McBride)</h3>
+Sat Feb 15 10:45:08 EST 2014 (Revised Mon Sep 30 12:13:37 EDT 2019)
+
+<hr>
+<UL>
+<LI><a href=http://community.topcoder.com/stat?c=problem_statement&pm=12609&rd=15503>Problem Statement</a>.
+<LI> <a href=main.cpp>A <b>main()</b> with the examples compiled in.</a>
+<LI> <a href=SwappingDigits.cpp>A skeleton that compiles with <b>main.cpp</b>.</a>
+<LI> <a href=tests.sh>A shell script that you can use to test your answer.</a>
+<LI> <a href=answers.txt>Your output should match this file exactly.</a>
+<p>
+<LI> <b>Problem Given in Topcoder</b>: 2013
+<LI> <b>Competitors who opened the problem</b>: 1078
+<LI> <b>Competitors who submitted a solution</b>: 892
+<LI> <b>Number of correct solutions</b>: 474
+<LI> <b>Accuracy (percentage correct vs those who opened)</b>: 44.0%
+<LI> <b>Average Correct Time</b>: 21 minutes, 30 seconds.
+</UL>
+
+<hr>
+<h3>In case Topcoder's servers are down</h3>
+
+Please use the workflow in the problem <a href=http://web.eecs.utk.edu/~plank/topcoder-writeups/2010/Cryptography/index.html>Cryptography</a>.
+<p>
+
+Here is a summary of the problem:
+
+<UL>
+<LI> You are given a string that represents a positive integer.
+<LI> The integer can be huge.  The topcoder constraints say up to 50 digits, but my testing
+     program goes up to roughly  9,600 digits.  Clearly, you can't store them in a <b>long long</b>.
+<LI> The string only contains the characters from '0' to '9', and it does not start with a zero.
+<LI> You are allowed to swap any two digits, although you don't have to if you don't want to.
+<LI> Your goal is to produce the smallest possible integer after swapping those two digits (or
+     not swapping, if that yields the smallest integer).
+<LI> That integer may not start with '0'.
+<LI> Return the string containing that integer.
+</UL>
+
+<hr>
+<h3>The examples</h3>
+
+<center>
+<table border=3 cellpadding=3>
+<tr><td align=center>Example</td>
+<td align=center>Input String</td>
+<td align=center>Answer</td></tr>
+
+<tr><td align=center valign=center>0</td>
+<td align=center valign=center><tt>"596"</tt></td>
+<td align=center valign=center><tt>"569"</td></tr>
+
+<tr><td align=center valign=center>1</td>
+<td align=center valign=center><tt>"93561"</tt></td>
+<td align=center valign=center><tt>"13569"</td></tr>
+
+<tr><td align=center valign=center>2</td>
+<td align=center valign=center><tt>"5491727514"</tt></td>
+<td align=center valign=center><tt>"1491727554"</td></tr>
+
+<tr><td align=center valign=center>3</td>
+<td align=center valign=center><tt>"10234"</tt></td>
+<td align=center valign=center><tt>"10234"</td></tr>
+
+<tr><td align=center valign=center>4</td>
+<td align=center valign=center><tt>"93218910471211292416"</tt></td>
+<td align=center valign=center><tt>"13218910471211292496"</td></tr>
+</table></center><p>
+
+<hr>
+
+I am going to present three ways to solve this problem -- one is very easy to write, and will
+run easily within Topcoder's time limits (but not with <b>tests.sh</b>).
+The other two require more thought, but end up with 
+programs that are better.  Go ahead and program up the easy one and submit/test it.
+Then, try one of the other ways.  It's good programming and thought practice.
+You should be able to analyze all of them to determine that the second
+and third ways are better than the first. 
+
+<hr>
+<h3>The Easy and Inefficient Way</h3>
+
+If you represent two numbers as strings with the same number of characters,
+then comparing the strings is equivalent to comparing the numbers.  So, the
+easiest thing to do is to try all combinations of <i>i</i> and <i>j</i>, swapping
+their digits, and returning the smallest number, while discarding numbers that begin with
+zero.
+<p>
+Enumerating all combinations of <i>i</i> and <i>j</i> takes roughly <i>n<sup>2</sup></i>
+operations, so this is not a good way to solve the problem in general.  However, the topcoder
+constraints limit the string to 50 characters, and 50*50 is a pretty small number, so it
+works easily.
+<p>
+In <b>tests.sh</b>, you can do the first 58 problems in under a second.  The 59th, and last
+problem is roughly 9600 characters, and took my program roughly 9 seconds to do.  You can 
+test your solution on the first 58 problems with:
+
+<pre>
+UNIX> <font color=darkred><b>head -n 58 tests.sh | sh</b></font>
+</pre>
+
+<hr>
+<h3>The Harder and Efficient Way</h3>
+
+To solve this problem more efficiently, think about conditions when you swap digits.
+In particular:
+
+<UL>
+<LI> Under what conditions would you swap the first digit?
+<LI> If you don't swap the first digit, then under what conditions would you swap
+the second digit?
+<LI> If you don't swap the second digit, how do you find the leftmost digit to swap?
+</UL>
+
+If you're still stuck, I'll answer those questions:
+
+<UL>
+<LI> If the first digit is greater than any other non-zero digit, then you are going
+to swap the first digit.  Consider example 2: "5491727514".  If you don't swap that
+initial 5, you'll end up with a number in the form "5xxxxxxxxx".  If you swap the 5 and
+the 4, you'll end up with "4591727514".  Clearly that number is smaller than any number
+that begins with 5.  That means you have to swap the five.
+<p>
+What are you going to swap it with?  Well, you want to maximize
+the effect of replacing the first digit, so you should swap it with the smallest digit
+that's not zero (because we are not allowed to start the number with a zero).
+What if there are multiple of these?  Again, let's look at example 2: "5491727514".  We
+want to swap the '5' with a '1' and there are two '1' digits.  The two potential 
+swaps yield "1495727514" and "1491727554".  The second of these is smaller -- we want
+to swap with the rightmost '1'.
+<p>
+Of course, that was just proof-by-Cosmo.  Can you prove to yourself that you want the
+rightmost, minimum non-zero digit?  It is correct.
+<p>
+As a second example, look at example 4: "93218910471211292416".  
+'9' is definitely bigger than some digits to its right, so you are going
+to swap it.  There are a bunch of ones, so you will swap it with a one, because that is the
+smallest non-zero digit.  Which '1'?  The rightmost one.  That's how you get the
+answer "13218910471211292496".
+<p>
+<LI> Now, if you don't swap the first digit, then you want to swap the second digit.  We don't
+care about leading zeros now, so if the second digit is greater than <i>any</i> digit to its
+right, we will be swapping the second digit.  With what do we swap it?  With the rightmost,
+smallest digit.
+<p>
+<LI> If we don't swap the second digit, that's because it is less than or equal to all 
+digits to the right.  Now, you need to find the leftmost digit that is greater than any digit
+to its right.  Swap that one with the rightmost smallest digit.
+</UL>
+<p>
+This gives us a strategy for solving the problem, but if we program it in the most
+natural way, the program still runs in <i>n<sup>2</sup></i> operations.  The most "natural"
+way is to work from the definition: start <i>i</i> at zero and have it go to the end of
+the string.  For each value of <i>i</i>, you look at each value to the right of <i>i</i> 
+and find the minimum, rightmost value (when <i>i</i> equals zero, you exclude zero).  If 
+this value is less than the digit in <i>i</i>, then you swap those digits and return.  If
+the value is greater than or equal to the digit in <i>i</i>, then you increment <i>i</i>
+and try again.
+<p>
+If you think about it, when your input is a non-decreasing sequence of digits, this technique
+still uses <i>n<sup>2</sup></i> operations.  Why?  Because at iteration <i>i</i>, you look 
+at all of the digits greater than <i>i</i>, and there are <i>n-i</i> of those (where the
+number has <i>n</i> digits).
+<p>
+How can we fix this?  By thinking clearly and organizing our code so that we are not
+doing unnecessary, nested <b>for</b> loops.  
+Interestingly, I solved it in one way, and Allen solved it
+another.  I'll describe both.  Allen's solution is better.
+<hr>
+<h3>The Plank Solution</h3>
+
+The Plank solution relies on the fact that there are only ten digits in our number.
+So, let's keep a vector <b>V</b>
+with ten elements.  <b>V[i]</b> holds the rightmost index of digit '<i>i</i>' in the
+string.  If digit '<i>i</i>' doesn't occur, then element <i>i</i> is -1.  In example 1, 
+where the string is "93561", the vector is 
+<p><center><table border=3 cellpadding=3>
+<tr>
+<td align=center><i>i</i></td>
+<td align=center>0</td>
+<td align=center>1</td>
+<td align=center>2</td>
+<td align=center>3</td>
+<td align=center>4</td>
+<td align=center>5</td>
+<td align=center>6</td>
+<td align=center>7</td>
+<td align=center>8</td>
+<td align=center>9</td>
+</tr>
+<tr>
+<td align=center><b>v[i]</b></td>
+<td align=center>-1</td>
+<td align=center>4</td>
+<td align=center>-1</td>
+<td align=center>1</td>
+<td align=center>-1</td>
+<td align=center>2</td>
+<td align=center>3</td>
+<td align=center>-1</td>
+<td align=center>-1</td>
+<td align=center>0</td>
+</tr>
+</table></center><p>
+Now, you run through the string as before, but finding the minimum value to the right of digit <i>i</i> simply requires you to run through the vector, whose size is limited to ten elements.  Instead of requiring <i>n<sup>2</sup></i> operations in the worst case, it is linear!  
+<p>
+When I ran <b>tests.sh</b> on this solution, the entire thing ran in 0.16 seconds.
+
+<hr>
+<h3>The McBride Solution</h3>
+
+In this solution, you work from the end of the string to the beginning of the string, and
+you maintain three variables: 
+<UL>
+<LI> <b>min_digit</b> is the minimum digit that you've seen so far.  Start it at '0'+10 at
+the beginning of the loop (this is an impossible value, but since it is greater than every digit,
+it works nicely in the loop.  This is called a "sentinel", by the way).
+<LI> <b>min_nonzero</b> is the minimum non-zero that you've seen so far.  Also start it at '0'+10 at
+the beginning of the loop.
+<LI> <b>lpos</b> is the index of the leftmost digit that is greater than either 
+<b>min_digit</b> or 
+<b>min_nonzero</b>.  If <b>lpos = 0</b> it must be greater than <b>min_nonzero</b>.  Otherwise,
+it must be greater than <b>min_digit</b>.  If there is no value of <b>lpos</b> that works, it
+should be -1.
+</UL>
+<p>
+
+Let's give an example that is similar to example 3: "10423".  You should be able to see that
+the answer will be "10243".  Here are the variables as you run through the string from right to
+left:
+<p><center><table border=3>
+<tr><td align=center><b>i</b></td>
+    <td align=center><b>min_digit</b></td>
+    <td align=center><b>min_nonzero</b></td>
+    <td align=center><b>lpos</b></td></tr>
+<tr><td align=center>Start</td>
+    <td align=center>'0'+10</td>
+    <td align=center>'0'+10</td>
+    <td align=center>-1</td><tr>
+<tr><td align=center>4</td>
+    <td align=center>'3'</td>
+    <td align=center>'3'</td>
+    <td align=center>-1</td><tr>
+<tr><td align=center>3</td>
+    <td align=center>'2'</td>
+    <td align=center>'2'</td>
+    <td align=center>-1</td><tr>
+<tr><td align=center>2</td>
+    <td align=center>'2'</td>
+    <td align=center>'2'</td>
+    <td align=center>2</td><tr>
+<tr><td align=center>1</td>
+    <td align=center>'0'</td>
+    <td align=center>'2'</td>
+    <td align=center>2</td><tr>
+<tr><td align=center>0</td>
+    <td align=center>'0'</td>
+    <td align=center>'1'</td>
+    <td align=center>2</td><tr>
+</table></center><p>
+
+In that last iteration, we don't set <b>lpos</b> equal to zero because the digit must be
+less then <b>min_nonzero</b> when <b>lpos</b> equals zero.
+<p>
+Now, when you're done, you are going to swap the digit at index <b>lpos</b>.  Obviously, if 
+<b>lpos</b> equals -1, you simply return the original string.   If <b>lpos</b> equals zero, you 
+want to find the rightmost minimum, non-zero digit, and swap with that.  Otherwise,
+you want to find the rightmost, minimum digit that is to the right of <b>lpos</b>, and swap
+with that.  In the example above, we start at index 2 (whose digit is '4'), 
+and find the rightmost, minimum digit
+to the right of it -- that's the '2', which is at index 3.  Swap the '2' and the '4', and you 
+have your answer.
+<p>
+Think about the running time.  The first loop runs through the string once.  And the second
+loop (finding the rightmost occurence of the digit to swap with <b>lpos</b>) also runs through 
+the string once.  That's two traversals of the string -- it's linear, and it doesn't rely on 
+the number of digits being limited to 10, like the Plank solution.  Very nice, Allen!
+<p>
+When I programmed this up, it also ran <b>tests.sh</b> in 0.16 seconds.
+<hr>
+When you program up one of these two solutions, test it with <b>tests.sh</b>.

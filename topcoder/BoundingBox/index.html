@@ -1,0 +1,127 @@
+<title>SRM 607, D2, 250-Pointer (BoundingBox)</title>
+<h3>SRM 607, D2, 250-Pointer (BoundingBox)</h3>
+<h3>James S. Plank</h3>
+Mon Sep 30 11:51:42 EDT 2019
+<hr>
+
+<UL>
+<LI><a href=https://community.topcoder.com/stat?c=problem_statement&pm=12990&rd=15840>Problem Statement</a>.
+<LI> <a href=main.cpp>A <b>main()</b> with the examples compiled in.</a>
+<LI> <a href=BoundingBox.cpp>A skeleton that compiles with <b>main.cpp</b>.</a>
+<LI> <a href=tests.sh>A shell script for testing</b>.</a>
+<LI> <a href=answers.txt>The correct output for <b>tests.sh</b>.</a>
+<p>
+<LI> <b>Problem Given in Topcoder</b>: 2014
+<LI> <b>Competitors who opened the problem</b>: 1102
+<LI> <b>Competitors who submitted a solution</b>: 1011
+<LI> <b>Number of correct solutions</b>: 974
+<LI> <b>Accuracy (percentage correct vs those who opened)</b>: 88.4%
+<LI> <b>Average Correct Time</b>: 12 minutes, 14 seconds.
+</UL>
+
+<hr>
+<h3>In case Topcoder's servers are down</h3>
+
+Please use the workflow in the problem <a href=http://web.eecs.utk.edu/~plank/topcoder-writeups/2010/Cryptography/index.html>Cryptography</a>.  You can test yourself with <b>tests.sh</b>, and your
+output should match <b><a href=answers.txt>answers.txt</b></a>.
+The problems in <b>tests.sh</b> go up to 1000 points in size -- your program should solve these
+in the blink of an eye.
+<p>
+Here is a summary of the problem:
+
+<UL>
+<LI> You are given two vectors of integers, <b>X</b> and <b>Y</b>.
+<LI> The two vectors are the same size and contain integers between -1000 and 1000.
+<LI> The vectors define cartesian coordinates. The points are <b>(X[i],Y[i])</b>
+     for <i>0 &le; i < </i><b>X.size()</b>.
+<LI> Suppose you draw a rectangle whose sides are parallel to the x and y axes,
+     and suppose that the rectangle contains all of the points.  
+<LI> Return the smallest possible area of a rectangle that does this.
+<LI> The problem will guarantee that the area will be greater than zero.
+</UL>
+
+<hr>
+<h3>Examples</h3>
+
+<center>
+<table border=3 cellpadding=3>
+<tr><td align=center>Example</td>
+<td align=center><b>X</b></td>
+<td align=center><b>Y</b></td>
+<td align=center>Answer</td></tr>
+
+<tr><td align=center valign=center>0</td>
+<td align=center valign=center><tt>{0,1}</tt></td>
+<td align=center valign=center><tt>{1,0}</tt></td>
+<td align=center valign=center><tt>1</tt></td></tr>
+
+<tr><td align=center valign=center>1</td>
+<td align=center valign=center><tt>{0,-2,-1}</tt></td>
+<td align=center valign=center><tt>{-1,-1,-2}</tt></td>
+<td align=center valign=center><tt>2</tt></td></tr>
+
+<tr><td align=center valign=center>2</td>
+<td align=center valign=center><tt>{0,0,1,0,-1,2}</tt></td>
+<td align=center valign=center><tt>{0,1,2,-2,0,-1}</tt></td>
+<td align=center valign=center><tt>12</tt></td></tr>
+
+<tr><td align=center valign=center>3</td>
+<td align=center valign=center><tt>{9,-88,-40,98,-55,41,-38}</tt></td>
+<td align=center valign=center><tt>{-65,56,-67,7,-58,33,68}</tt></td>
+<td align=center valign=center><tt>25110</tt></td></tr>
+
+</table></center><p>
+<hr>
+Try this one on your own first.  I suggest graphing examples 1 and 2, and the answer should
+fall out pretty naturally.
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+<hr><p>
+The bounding box will be defined by the:
+<p>
+<UL>
+<LI> Minimum x value, <i>minx</i>
+<LI> Maximum x value, <i>maxx</i>
+<LI> Minimum y value, <i>miny</i>
+<LI> Maximum y value, <i>maxy</i>
+</UL>
+<p>
+The width of the bounding box is <i>maxx-minx</i>, and the height is
+<i>maxy-miny</i>.

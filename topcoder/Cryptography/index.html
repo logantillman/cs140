@@ -1,0 +1,248 @@
+<title>SRM 480, D2, 250-Pointer (Cryptography)</title>
+<h3>SRM 480, D2, 250-Pointer (Cryptography)</h3>
+<h3>James S. Plank</h3>
+Thu Dec 20 12:27:25 EST 2018
+<hr>
+
+
+<UL>
+<LI><a href=https://community.topcoder.com/stat?c=problem_statement&pm=10814&rd=14159>Problem Statement</a>.
+<LI> <a href=main.cpp>A <b>main()</b> with the examples compiled in.</a>
+<LI> <a href=Cryptography.cpp>A skeleton that compiles with <b>main.cpp</b>.</a>
+<p>
+<LI> <b>Problem Given in Topcoder</b>: August, 2010
+<LI> <b>Competitors who opened the problem</b>: 755
+<LI> <b>Competitors who submitted a solution</b>: 709
+<LI> <b>Number of correct solutions</b>: 694
+<LI> <b>Accuracy (percentage correct vs those who opened)</b>: 91.9%
+<LI> <b>Average Correct Time</b>: 9 minutes, 35 seconds.
+</UL>
+
+<hr>
+<h3>In case the Topcoder servers are down</h3>
+Here is a summary of the problem:
+<UL>
+<LI> You are given a vector of integers called <b>numbers</b>.
+<LI> The elements of <b>numbers</b> will be between 1 and 1000.
+<LI> The size of <b>numbers</b> will be at least two and at most 50.
+<LI> Your goal is to add one to exactly one element of <b>numbers</b>, and then calculate
+     the product of all of the elements.   The element you choose to increment should be
+     the one that maximizes this product.
+<LI> Return the product.  It will be a <b>long long</b>, and the inputs will guarantee that
+     product does not exceed 2<sup>62</sup>.
+</UL>
+
+<hr>
+<h3>Examples</h3>
+
+These are all included in <b>main.cpp</b>.  If you give the input "-" to <b>main.cpp</b>, 
+then it will read its values from standard input.
+
+<p><center>
+<table border=3 cellpadding=5>
+<tr><td valign=top>0</td><td valign=top><tt>{ 1, 2, 3 }</tt></td><td>12</td></tr>
+<tr><td valign=top>1</td><td valign=top><tt>{ 1, 3, 2, 1, 1, 3 }</tt></td><td>36</td></tr>
+<tr><td valign=top>2</td><td valign=top><tt>{1000, 999, 998, 997, 996, 995}</tt></td><td>986074810223904000</td></tr>
+<tr><td valign=top>3</td><td valign=top><tt>{ 1, 1, 1, 1 }</tt></td><td>2</td></tr>
+</table></center>
+<hr>
+
+<h3>Testing Yourself without Topcoder's Servers</h3>
+
+The workflow that I use for Topcoder is as follows:
+
+<UL>
+<LI> I implement the class and method in a file that has the class' name.  In this 
+case, the file is <a href=Cryptography.cpp><b>Cryptography.cpp</b></a>.  
+This is the "skeleton" file in the bulleted list above.
+I have already filled in the class definition
+for you, so all you have to do is implement the method, which in this case is <b>encrypt()</b>.
+<p>
+<LI> I compile with "g++ main.cpp".  You'll note that <b>main.cpp</b> includes <b>Cryptography.cpp</b>.  This is in general a really bad practice.  You want to include header files, and then
+link together source files (please see the CS140 lecture in <a href=http://web.eecs.utk.edu/~jplank/plank/classes/cs140/Notes/Classes/index.html>http://web.eecs.utk.edu/~jplank/plank/classes/cs140/Notes/Classes/index.html</a> for a detailed explanation and example).  However, it is expedient
+here, and it's convenient because you can debug your code with <b>main.cpp</b>, and then
+submit <b>Cryptography.cpp</b> to topcoder.
+<p>
+<LI> The result of compilation is an <b>./a.out</b> file, which you can execute with <b>a.out</b>.
+<p>
+<LI> I have included a shell script called <b>tests.sh</b>.  It simply runs a bunch of inputs
+on <b>a.out</b>.  Here's an example of calling it:
+
+<pre>
+UNIX> <font color=darkred><b>sh tests.sh</b></font>
+12
+36
+986069860049153880
+2
+7601258117112660
+11654570193710400
+92953772500680000
+799967508480
+307257753600
+60949905408
+37412763010118496
+328150073180160
+1386927360000000
+103723200000
+156764160000
+33861058560
+303992974847508480
+14169988790496000
+11069314249061376
+65156670562135680
+27311800320
+2913258700800
+4756917475143680
+1331646220800000
+86802030000
+29030400000
+UNIX> <font color=darkred><b></b></font>
+</pre>
+
+How do you know if your code is working?  Call <b>tests.sh</b> and store its standard output
+to a file.  Then compare the file with <b>answers.txt</b>.  Let me do that here:
+
+<pre>
+UNIX> <font color=darkred><b>sh tests.sh > junk.txt</b></font>
+UNIX> <font color=darkred><b>diff junk.txt answers.txt</b></font>
+3c3
+< 986069860049153880
+---
+> 986074810223904000
+5,10c5,10
+< 7601258117112660
+< 11654570193710400
+......
+UNIX>
+</pre>
+
+If the output is non-empty, it means that your program is not working correctly.  
+You can try <b>diff -y</b>, and it will show you the tests that you got wrong, 
+by lining up your file and the answers line-by-line:
+
+<pre>
+UNIX> <font color=darkred><b>diff -y junk.txt answers.txt</b></font>
+12								12
+36								36
+986069860049153880					      |	986074810223904000
+2								2
+7601258117112660					      |	7654413768281280
+11654570193710400					      |	15347582148096000
+92953772500680000					      |	113868371313333000
+799967508480						      |	1371372871680
+307257753600						      |	460886630400
+60949905408						      |	81266540544
+37412763010118496						37412763010118496
+328150073180160						      |	628954306928640
+1386927360000000					      |	2037934080000000
+103723200000							103723200000
+156764160000						      |	250822656000
+33861058560						      |	60197437440
+303992974847508480						303992974847508480
+14169988790496000					      |	14571784313856000
+11069314249061376					      |	11602061993668608
+65156670562135680					      |	65880633568381632
+27311800320						      |	36415733760
+2913258700800						      |	5098202726400
+4756917475143680						4756917475143680
+1331646220800000						1331646220800000
+86802030000						      |	115736040000
+29030400000							29030400000
+UNIX> <font color=darkred><b></b></font>
+</pre>
+
+As you can see, lines 3, 5, 6, 7, and so on differ.  So look at lines three and
+five of <b>tests.sh</b>:
+
+<pre>
+UNIX> <font color=darkred><b>sed -n 3p tests.sh</b></font>
+./a.out 2
+UNIX> <font color=darkred><b>sed -n 5p tests.sh</b></font>
+echo 12 63 11 57 71 33 47 47 44 65 | ./a.out -
+UNIX> <font color=darkred><b></b></font>
+</pre>
+
+You now have test cases to help you debug!  If your output of <b>tests.sh</b> is the
+same as <b>answers.txt</b>, then you can be satisfied that you have solved the problem!
+</UL>
+
+<hr>
+<h3> Hints</h3>
+
+
+
+
+
+
+
+Try this first on your own.  If you get stuck or frustrated, then come back here and scroll down.
+
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+
+First off, you need to figure out -- given a collection of numbers, which number do I increment
+so that the product is increased by the largest amount?  It shouldn't be too hard to see that
+you need to increment the smallest number.
+<p>
+<font color=red>[If you want to prove that formally, you can.  Suppose you have a collection of numbers whose
+product is <i>P</I>.  And suppose you have two numbers in the collection, <i>a</i> and <i>b</i>
+such that <i>a &lt; b</i>.  
+If you increment <i>a</i>, you change the product from <i>P</i> to <i>P(a+1)/a</i>.  
+If you increment <i>b</i>, you change the product to <i>P(b+1)/b</i>.   Since
+<i>a &lt; b</i>, 
+we know that <i>(a+1)/a &gt; (b+1)/b</i>.  (If you are stuck on that, think about examples: 3/2 is definitely greater than 101/100, right?)  That means incrementing <i>a</i> will increase the 
+factor by the greatest amount.]</font>
+<p>
+So, you need to find the minimum element and increment it.  You can write your own code to do that in two lines.  Or you can use the <b>sort()</b> method from C++'s algorithms package to 
+sort the vector and then increment the first element.  
+<p>
+Now how about calculating the product?  Since you are told that the product will be &le; 2<sup>62</sup>, you need to use a 64-bit integer.  In C++, this is a <b>long long</b>.  Calculate your product using that, and you're done.  

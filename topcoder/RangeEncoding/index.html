@@ -1,0 +1,95 @@
+<title>SRM 714, D2, 250-Pointer (RangeEncoding)</title>
+<h3>SRM 714, D2, 250-Pointer (RangeEncoding)</h3>
+<h3>James S. Plank</h3>
+Wed May 10 01:06:48 EDT 2017
+<hr>
+
+<UL>
+<LI><a href=https://community.topcoder.com/stat?c=problem_statement&pm=14592&rd=16883>Problem Statement</a>.
+<LI> <a href=main.cpp>A <b>main()</b> with the examples compiled in.</a>
+<LI> <a href=RangeEncoding.cpp>A skeleton that compiles with <b>main.cpp</b>.</a>
+<p>
+<LI> <b>Problem Given in Topcoder</b>: May, 2017
+<LI> <b>Competitors who opened the problem</b>: 295
+<LI> <b>Competitors who submitted a solution</b>: 285
+<LI> <b>Number of correct solutions</b>: 275
+<LI> <b>Accuracy (percentage correct vs those who opened)</b>: 93.2%
+<LI> <b>Average Correct Time</b>: 7 minutes, 54 seconds.
+</UL>
+
+<hr>
+In case Topcoder's servers are down, here is a summary of the problem:
+
+<UL>
+<LI> You are given a vector of integers, <b>arr</b>.
+<LI> The integers are distinct, positive, and in increasing order.
+<LI> The topcoder constraints have the size of <b>arr</b> being between 1 and 50, but you can 
+     solve this for array sizes up to 1,000,000.
+<LI> For any two integers <i>a &le; b</i>, the "range <i>[a,b]</i>" 
+      is composed of all integers <i>i</i> such that <i>a &le; i &le; b</i>.
+<LI> If you view <b>arr</b> as a union of ranges, what is the smallest number of
+     ranges that are required, so that their union is <b>arr</b>.
+</UL>
+
+<hr>
+Examples (these are compiled into the <b>main.cpp</b> program):
+<p>
+<p><center><table border=3>
+<tr>
+<td align=center>Example</td>
+<td align=center>Input</td>
+<td align=center>Output</td>
+</tr>
+<tr>
+<td align=center>0</td>
+<td align=center>{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }</td>
+<td align=center>1</td>
+</tr>
+<tr>
+<td align=center>1</td>
+<td align=center>{ 1, 6, 10, 20, 32, 49 }</td>
+<td align=center>6</td>
+</tr>
+<tr>
+<td align=center>2</td>
+<td align=center>{ 2, 4, 5, 6, 8, 9, 10, 11, 12, 15 }</td>
+<td align=center>4</td>
+</tr>
+<tr>
+<td align=center>3</td>
+<td align=center>{ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47 }</td>
+<td align=center>14</td>
+</tr>
+<tr>
+<td align=center>4</td>
+<td align=center>{ 10, 11, 12, 13, 14, 15, 20, 21, 22, 23, 25, 27, 28, 29, 30, 31, 32, 33 }</td>
+<td align=center>4</td>
+</tr>
+<tr>
+<td align=center>5</td>
+<td align=center>{ 33 }</td>
+<td align=center>1</td>
+</tr>
+</table>
+</center>
+
+I have also made it so that if you give the test program a number between 6 and 1,000,000, then
+it generates a random problem with that many elements in <b>arr</b>.
+<p>
+If you compile your program to <b>a.out</b>, then running 
+<b><a href=tests.sh>tests.sh</a></b>
+should
+yield the exact same answer as 
+<b><a href=answers.txt>answers.txt</a></b>.  The whole thing should take under a half of
+a second.
+
+<hr>
+<H3>Hints (or, in this case, not really)</h3>
+
+As the numbers above show, this was one of the easiest Topcoder problems ever.  
+I'm not going to give code here -- this is for you to figure out.  My one hint is that my 
+for loop was:
+
+<pre>
+  for (i = 1; i < arr.size(); i++) ...
+</pre>

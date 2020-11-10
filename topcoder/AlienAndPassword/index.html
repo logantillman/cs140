@@ -1,0 +1,224 @@
+<title>SRM 605, D2, 250-Pointer (AlienAndPassword)</title>
+<h3>SRM 605, D2, 250-Pointer (AlienAndPassword)</h3>
+<h3>James S. Plank</h3>
+Sun Jul 21 09:39:21 EDT 2019
+<hr>
+
+<UL>
+<LI><a href=https://community.topcoder.com/stat?c=problem_statement&pm=12950&rd=15838>Problem Statement</a>.
+<LI> <a href=main.cpp>A <b>main()</b> with the examples compiled in.</a>
+<LI> <a href=AlienAndPassword.cpp>A skeleton that compiles with <b>main.cpp</b>.</a>
+<p>
+<LI> <b>Problem Given in Topcoder</b>: 2014
+<LI> <b>Competitors who opened the problem</b>: 1006
+<LI> <b>Competitors who submitted a solution</b>: 968
+<LI> <b>Number of correct solutions</b>: 946
+<LI> <b>Accuracy (percentage correct vs those who opened)</b>: 94.0%
+<LI> <b>Average Correct Time</b>: 9 minutes, 4 seconds.
+</UL>
+
+<hr>
+<h3>In case Topcoder's servers are down</h3>
+
+(Please use the workflow in the problem <a href=http://web.eecs.utk.edu/~plank/topcoder-writeups/2010/Cryptography/index.html>Cryptography</a>).
+<p>
+Here is a summary of the problem:
+
+<UL>
+<LI> You are given a string <b>S</b>.
+<LI> Your job will be to delete one character from <b>S</b> to obtain a potential password.
+<LI> Return how many potential passwords that you can generate in this way.
+<LI> Topcoder constrains <b>S</b> to be between 1 and 50 characters, but I am going
+     to constrain them to be between 1 and 100,000 characters.
+</UL>
+
+<hr>
+
+<h3>The examples</h3>
+
+<center>
+<table border=3 cellpadding=3>
+<tr><td align=center>Example</td>
+<td align=center><b>S</b></td>
+<td align=center>Answer</td></tr>
+
+<tr><td align=center valign=center>0</td>
+<td align=center valign=center><tt>"A"</tt></td>
+<td align=center valign=center><tt>1</td></tr>
+
+<tr><td align=center valign=center>1</td>
+<td align=center valign=center><tt>"ABA"</tt></td>
+<td align=center valign=center><tt>3</td></tr>
+
+<tr><td align=center valign=center>2</td>
+<td align=center valign=center><tt>"ABA"</tt></td>
+<td align=center valign=center><tt>AABACCCCABAA</td></tr>
+
+<tr><td align=center valign=center>3</td>
+<td align=center valign=center><tt>"AGAAGAHHHHFTQLLAPUURQQRRRUFJJSBSZVJZZZ"</tt></td>
+<td align=center valign=center><tt>26</td></tr>
+
+<tr><td align=center valign=center>4</td>
+<td align=center valign=center><tt>"ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"</tt></td>
+<td align=center valign=center><tt>1</td></tr>
+
+</table>
+</center><p>
+
+<hr>
+<h3>Testing yourself</h3>
+
+I have a shell script
+<b><a href=tests.sh>tests.sh</a></b>, that you can use to test your program.  When you
+run <b>tests.sh</b>, your answer should be identical to
+<b><a href=answers.txt>answers.txt</a></b>.  The shell script should take roughly a second.
+<p>
+I have a second shell script called
+<b><a href=time-tests.sh>time-tests.sh</a></b> -- run this to see timings of each group
+of 20 tests from <b><a href=tests.sh>tests.sh</a></b>.  The input size in of these groups 
+grows by a factor of 10 from the previous group.
+
+<hr>
+<h3>Hints</h3>
+Try this on your own before reading further.  Even if you run this using topcoder, and 
+have it pass the system test, please compile and run it on your own machine, and see how
+long <b><a href=tests.sh>tests.sh</a></b> and
+<b><a href=time-tests.sh>time-tests.sh</a></b> take.
+
+
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+
+The topcoder constraints on this problem are so small that pretty much any solution will
+work.  I'm sure that's why the correct percentage here is so high.
+In <b><a href=BadSolution.cpp>BadSolution.cpp</a></b>, I wrote up about the 
+worst solution that I could think of (that wasn't really trying to be bad).  
+It passed Topcoder's system tests easily.  Let's take a look -- the comments 
+explain the solution.
+
+<p><center><table border=3 cellpadding=3><td><pre>
+<font color=blue>/* find() is a procedure that finds string s in vector v.
+   If s is in v, find() returns the index of s.
+   Otherwise, it returns -1 */</font>
+
+int find(vector &lt;string&gt; v, string s)
+{
+  int i;
+
+  for (i = 0; i &lt; v.size(); i++) if (v[i] == s) return i;
+  return -1;
+}
+
+<font color=blue>/* Solve the problem by creating each potential password,
+   and then trying to find it in a list of potential
+   passwords.  If it's not there, add it to the list, and
+   then return the list's size. */</font>
+
+int AlienAndPassword::getNumber(string S)
+{
+  vector &lt;string&gt; pot;
+  string p;
+  int i;
+
+  for (i = 0; i &lt; S.size(); i++) {
+    p = S.substr(0,i) + S.substr(i+1);
+    if (find(pot, p) == -1) pot.push_back(p);
+  }
+  return pot.size();
+}
+</pre></td></table></center><p>
+
+This solves the problem directly by generating each potential password, and then searching
+for it in a list of potential passwords.  Why is this bad?  Let's analyze it, when <b>S</b>
+has <i>n</i> characters, and all potential passwords are different:
+
+<UL>
+<LI> <b>find()</b> is potentially <i>O(n<sup>2</sup>)</i>, because the loop iterates <i>O(n)</i>
+     times, and the string comparison is <i>O(n)</i>.  Because you don't use reference variables,
+     It's an additional <i>O(n)</i> to copy <b>v</b>.  However, 
+     <i>O(n<sup>2</sup>)+O(n<sup>2</sup>)</i> is still <i>O(n<sup>2</sup>)</i>.
+<LI> In <b>getNumber()</b>, the loop iterates <i>O(n)</i> times.  Creating <b>p</b> is
+     <i>O(n)</i> as well, but that's not really important, because as mentioned above,
+     calling <b>find()</b> is
+     <i>O(n<sup>2</sup>)+O(n<sup>2</sup>)</i>.
+<LI> For that reason, this program is <i>O(n<sup>3</sup>)</i>.
+</UL>
+
+This took 9 minutes on tests 61-80 (no compiler optimization).  
+I didn't bother timing tests 81-100, as they project to take about 150 hours!
+
+<p>
+You can use a <b>set</b> instead of a vector, and get this down to <i>O(n<sup>2</sup> log(n))</i>
+(which took 12 seconds on tests 81-100).
+
+<p>
+However, ask yourself some questions to prove when two potential passwords will be the same.
+Let's take as an example, <b>S = "AABBCA"</b>.
+
+<UL>
+<LI> If you delete character <b>S[i]</b> and character <b>S[j]</b>, and they are different, 
+     will the two potential passwords be the same or different?  For example, if you delete
+     an 'A', regardless of which one it is, the resulting password will always be different
+     from when you delete a 'B'.  
+<LI> If you delete character <b>S[i]</b> and character <b>S[j]</b>, and they are the
+     same, but there is a different character between them, 
+     will the two potential passwords be the same or different?  For example, deleting the
+     first 'A' in "AABBCA" will give you a different password than deleting the last one.
+<LI> This means that we can focus on characters that are the same, and there are no different
+     characters between them.  In this case, deleting the characters will yield the same
+     password.
+</UL>
+
+Now we have a strategy.  If a character is the same as the previous character, then deleting
+it will yield the same password as deleting the previous character.  If it is different, then
+it will yield a different password.  So count the number of characters which are the same as
+previous characters, subtract that total from <b>S.size()</b>, and you're done.  <i>O(n)</i>,
+and 0.86 seconds for tests 81-100!

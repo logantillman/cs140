@@ -1,0 +1,26 @@
+newgraph
+xaxis min -120 max 120 size 3 shash 0 hash 50 mhash 4 
+yaxis min 0 max 450 size 3 shash 0 hash 50 mhash 4
+
+newline rarrow pts -108 299 -52 320
+
+newcurve marktype circle cfill 1 0 0 marksize 10 linetype solid color 0 0 0 linethickness 2 pts
+  0 0
+ 84 28
+ 70 141
+ -33 232
+ -70 280
+ -108 299
+ -29 363
+ 52 402
+ 66 427
+
+newstring hjl vjc fontsize 10 x 94 y 28 : (84,28) X-dist:84, Y-dist:28 -- Can't do.
+copystring x 80 y 141 : (70,141) X-dist:14, Y-dist:113 -- OK.
+copystring x -23 y 232 : (-33,232) X-dist:103, Y-dist:91 -- Can't do.
+copystring x -60 y 280 : (-70,280) X-dist:37, Y-dist:48 -- OK.
+copystring x -50 y 320 : (-108,299) X-dist:38, Y-dist:19 -- Can't do.
+copystring x -14 y 363 : (-29,363) X-dist:79, Y-dist:64 -- Can't do.
+copystring x 62 y 402 : (-52,402) X-dist:81, Y-dist:39 -- Can't do.
+copystring x 76 y 427 : (-66,427) X-dist:14, Y-dist:25 -- OK.
+
